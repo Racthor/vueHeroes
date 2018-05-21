@@ -1,33 +1,48 @@
 <template>
   <div class="mainVue">
+    <component:Header></component:Header>
     <h1>{{ titre }}</h1>
     <p>
-      En fait on va avoir plein de vue les unes dans les autres wesh !
+      Version de vueHeroes : {{ version }}
     </p>
-    <ul>
-      <li v-for="histoire in findDatas()">
-        <button @click="findHistory(histoire)">{{histoire}}</button>
-      </li>
-    </ul>
+    <div v-if="quelleHistoire">
+      <ul>
+        <li v-for="(histoire, index) in findDatas()">
+          <button @click="findHistory(index)">{{histoire}}</button>
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <HistoryContent />
+    </div>
+    <component:Footer></component:Footer>
   </div>
 </template>
 
 <script>
+import HistoryContent from './HistoryContent.vue'
+
 export default {
   name: 'Main',
+  components: {
+    HistoryContent
+  },
   props: {
+    quelleHistoire: true,
     titre: String,
     version: String
   },
-  computed : {
+  data: {
+    cetteHistoire: String
   },
   methods : {
     findDatas : function () {
       //TODO : lire un fichier genre datas.json qui contient toutes les donnée nécessaire pour jouer.
       return ["histoire 1", "histoire 2", "histoire 3"];
     },
-    findHistory : function (histoire) {
-      alert(this.findDatas().histoire);
+    findHistory : function (indHistoire) {
+      this.quelleHistoire = false;
+      this.cetteHistoire = this.findDatas()[indHistoire];
     }
   }
 }
